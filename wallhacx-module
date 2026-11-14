@@ -1,0 +1,25 @@
+Esse módulo implementa uma proteção contra wallhack no servidor: tenta impedir que o cliente receba atualizações de entidades inimigas que estejam ocultas por geometria sólida. Isso reduz a informação disponível para um cheat de wallhack.
+
+Como funciona
+Instala um hook em CheckTransmit
+No construtor, se AntiWallHack estiver habilitado, o módulo configura o hook TransmitHook e tenta ajustar a convar sv_enable_donttransmit. O hook permite examinar as entidades que o servidor está prestes a transmitir para cada jogador.
+
+Avalia a visibilidade dos jogadores
+Em cada chamada do hook (OnPostTransmit), ele percorre os destinatários e chama _tracker.EvaluateViewer(recipient, tick). O VisibilityTracker e o OcclusionTracer fazem o trabalho de avaliar visibilidade e oclusão; os detalhes dessa avaliação estão nesses outros componentes, não neste arquivo.
+
+Pode operar em modo de observação
+Com ShadowMode ativado, calcula e acompanha as métricas, mas retorna antes de suprimir entidades. Assim, é possível observar o comportamento sem bloquear transmissões.
+
+Suprime entidades ocultas
+Fora do modo de observação, consulta _tracker.GetHiddenEntities(slot, tick) para cada destinatário. Para cada entidade válida da lista, chama TransmitHook.WithholdEntity(...), que altera as máscaras de transmissão para que a entidade não seja enviada àquele jogador. O comentário da classe diz que isso pode incluir pawns inimigos, filhos de cena e armas.
+
+Estado e ciclo de vida
+Início e fim da rodada: limpam o acompanhamento de fumaça e de visibilidade; no fim da rodada, a transmissão é ignorada.
+Fumaça e HE: os métodos OnSmokeDetonate e OnHeDetonate passam os eventos ao SmokeOcclusionTracker.
+Disparo de arma: OnWeaponFired informa o evento ao VisibilityTracker.
+Falha no hook: marca o módulo como FAULTED, registra o erro e limpa o estado de visibilidade, evitando continuar a aplicar a lógica após uma falha.
+Desativação ou descarte: remove o hook, limpa o tracker e tenta restaurar o valor anterior da convar.
+Métricas expostas
+O módulo disponibiliza dados como pares ocultos, traços feitos e ignorados por limite de orçamento, além de entidades retidas no tick. Stats() também formata um resumo do estado; o trecho fornecido está truncado no final dessa função.
+
+Em resumo: este arquivo coordena o hook e a aplicação da supressão. A decisão de quais entidades estão ocultas depende principalmente de VisibilityTracker e OcclusionTracer, então não dá para afirmar, só com este trecho, os critérios exatos de linha de visão, alcance ou orçamento.
