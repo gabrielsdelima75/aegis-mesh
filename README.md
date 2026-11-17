@@ -24,7 +24,7 @@ O projeto baseia-se em três pilares fundamentais:
 - **Relay de Consenso**: Atua como o nó central que coordena os desafios aleatórios entre os clientes (*Trust Mesh*).  
 - **Telemetria de Partida**: Cruza eventos do jogo (ex: kills através de fumaça) com solicitações automáticas de snapshots no cliente.  
 
-### 2. Desktop Client (C# / .NET 8)
+### 2. Desktop Client (C# / .NET 10)
 - **Integrity Engine**: Monitora a memória do `cs2.exe`, lista de processos e módulos carregados.  
 - **Silent Capture**: Captura de tela via GPU para detecção de overlays externos (ESP/Wallhack).  
 - **Consensus Node**: Participa da corrente de hashes da partida, validando a presença de outros nós ativos na rede.  
