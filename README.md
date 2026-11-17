@@ -99,7 +99,7 @@ The project is based on three fundamental pillars:
 - **Consensus Relay**: Acts as the central node that coordinates random challenges between clients (Trust Mesh).
 - **Match Telemetry**: Cross-references game events (e.g., kills via smoke) with automatic snapshot requests on the client.
 
-### 2. Desktop Client (C# / .NET 8)
+### 2. Desktop Client (C# / .NET 10)
 - **Integrity Engine**: Monitors the memory of `cs2.exe`, list of processes, and loaded modules.
 - **Silent Capture**: Screenshot capture via GPU for detection of external overlays (ESP/Wallhack).
 - **Consensus Node**: Participates in the match's hash stream, validating the presence of other active nodes on the network.
